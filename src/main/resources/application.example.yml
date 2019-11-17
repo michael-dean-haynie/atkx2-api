@@ -1,0 +1,36 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/atkx2
+    username: root
+    password:
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+    hibernate:
+      ddl-auto: none
+      use-new-id-generator-mappings: false
+
+atkx2:
+  seed-db-on-startup: true
+
+---
+# jpa debugging (https://www.baeldung.com/sql-logging-spring-boot)
+
+#spring:
+#  jpa:
+#    show-sql: true
+#    properties:
+#      hibernate:
+#        format_sql: true
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
