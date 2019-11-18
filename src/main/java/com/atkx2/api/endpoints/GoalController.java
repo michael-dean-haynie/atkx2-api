@@ -5,6 +5,8 @@ import com.atkx2.api.services.GoalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController()
 @RequestMapping(GoalController.PATH)
 public class GoalController {
@@ -22,5 +24,10 @@ public class GoalController {
     @GetMapping("{id}")
     public GoalDTO get(@PathVariable Long id){
         return goalService.get(id);
+    }
+
+    @GetMapping("/feed/retro")
+    public List<GoalDTO> getFeedRetro() {
+        return goalService.getGoalsThatHaveEnded();
     }
 }

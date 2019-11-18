@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class SeedingService {
@@ -56,9 +57,15 @@ public class SeedingService {
          * Seed Goal Entities
          * -------------------------------------------------------------------------------------------------------------------
          */
-        createGoal("Goal 1", "acceptanceCriteria", "description", new Timestamp(0), new Timestamp(0), driveMap.get("Drive 1"), false, null, null, null, null);
-        createGoal("Goal 2", "acceptanceCriteria", "description", new Timestamp(0), new Timestamp(0), driveMap.get("Drive 1"), false, null, null, null, null);
-        createGoal("Goal 3", "acceptanceCriteria", "description", new Timestamp(0), new Timestamp(0), driveMap.get("Drive 1"), false, null, null, null, null);
+        createGoal(Goal.builder().title("Goal 1").acceptanceCriteria("criteria").description("description")
+                .start(hoursAgo(0)).end(hoursAgo(0))
+                .drive(driveMap.get("Drive 1")).build());
+        createGoal(Goal.builder().title("Goal 2").acceptanceCriteria("criteria").description("description")
+                .start(hoursAgo(1)).end(hoursAgo(1))
+                .drive(driveMap.get("Drive 1")).build());
+        createGoal(Goal.builder().title("Goal 3").acceptanceCriteria("criteria").description("description")
+                .start(hoursAgo(2)).end(hoursAgo(3))
+                .drive(driveMap.get("Drive 1")).build());
 
     }
 
@@ -81,20 +88,13 @@ public class SeedingService {
         driveMap.put(drive.getTitle(), drive);
     }
 
-    private void createGoal(String title, String acceptanceCriteria, String description, Timestamp start, Timestamp end, Drive drive, Boolean retroComplete, Boolean criteriaWasMet, String criteriaNotMetReasons, Boolean goalWasEffective, String retroComments) {
-        Goal goal = new Goal();
-        goal.setTitle(title);
-        goal.setAcceptanceCriteria(acceptanceCriteria);
-        goal.setDescription(description);
-        goal.setStart(start);
-        goal.setEnd(end);
-        goal.setDrive(drive);
-        goal.setRetroComplete(retroComplete);
-        goal.setCriteriaWasMet(criteriaWasMet);
-        goal.setCriteriaNotMetReasons(criteriaNotMetReasons);
-        goal.setGoalWasEffective(goalWasEffective);
-        goal.setRetroComments(retroComments);
+    private void createGoal(Goal goal) {
+        goal.setRetroComplete(false);
         goalRepository.save(goal);
         goalMap.put(goal.getTitle(), goal);
+    }
+
+    private Timestamp hoursAgo(int hours) {
+        return new Timestamp(System.currentTimeMillis() - (TimeUnit.HOURS.toMillis(hours)));
     }
 }
